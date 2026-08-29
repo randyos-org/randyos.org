@@ -17,3 +17,9 @@ jobs:
           server: codeberg.page
           token: ${{ forgejo.token }}
           source: _site/
+      - uses: actions/git-pages@v2
+        with:
+          site: https://www.randyos.org/
+          server: codeberg.page
+          token: ${{ forgejo.token }}
+          source: _site/

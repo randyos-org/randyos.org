@@ -1,0 +1,9 @@
+/*
+    # Do not pass your website address to the links user follows
+    Referrer-Policy: no-referrer
+    # Disallow embedding your website and impersonating as you
+    X-Frame-Options: SAMEORIGIN
+    # Flag unsafe HTTP requests and force HTTPS
+    Content-Security-Policy: upgrade-insecure-requests; block-all-mixed-content
+    # Disable Google FLoC
+    Permissions-Policy: interest-cohort=()
