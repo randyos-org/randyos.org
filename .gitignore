@@ -1,0 +1,7 @@
+.zig-cache/
+zig-pkg/
+zig-out/
+/resources
+doctest-*
+/public
+/zine.exe

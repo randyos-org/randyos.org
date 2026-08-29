@@ -2,24 +2,28 @@ name: Publish
 on:
   push:
     branches: [main]
+
 jobs:
   publish:
-    runs-on: codeberg-tiny
+    runs-on: ubuntu-latest
+    name: Build and Deploy
     steps:
       - uses: actions/checkout@v7
+      - uses: https://codeberg.org/mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
       - run: |
-          # Use your favorite static site generator here!
-          mkdir _site
-          cp *.html _redirects _headers _site/
+          zig build
+          cp _redirects _headers public/
       - uses: actions/git-pages@v2
         with:
           site: https://randyos.org/
           server: codeberg.page
           token: ${{ forgejo.token }}
-          source: _site/
+          source: public/
       - uses: actions/git-pages@v2
         with:
           site: https://www.randyos.org/
           server: codeberg.page
           token: ${{ forgejo.token }}
-          source: _site/
+          source: public/
