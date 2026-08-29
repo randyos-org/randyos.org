@@ -65,7 +65,7 @@ union Site {
         static_assets: []bytes,
         /// When enabled, Zine will automatically add 'width' and 'height'
         /// attributes to <img> elements for local assets.
-        /// Be aware that setting 'width' and 'heigth' of an image will in some
+        /// Be aware that setting 'width' and 'height' of an image will in some
         /// circumstances cause browsers to distort images.
         ///
         /// This problem can be solved by adding the following CSS code to your
@@ -93,7 +93,7 @@ union Site {
         /// Location where site- and build- assets will be installed. By default
         /// assets will be installed directly in the output location.
         ///
-        /// In mulitilingual websites Zine will create a single copy of
+        /// In multilingual websites Zine will create a single copy of
         /// site assets which will then be installed at this location. It
         /// will be your duty to then copy this directory elsewhere if
         /// needed in your deployment setup (e.g. when deploying different
@@ -122,7 +122,7 @@ union Site {
         locales: []Locale,
         /// When enabled, Zine will automatically add 'width' and 'height'
         /// attributes to <img> elements for local assets.
-        /// Be aware that setting 'width' and 'heigth' of an image will in some
+        /// Be aware that setting 'width' and 'height' of an image will in some
         /// circumstances cause browsers to distort images.
         ///
         /// This problem can be solved by adding the following CSS code to your

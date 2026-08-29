@@ -1,0 +1,3 @@
+[submodule "assets/logo"]
+	path = assets/logo
+	url = https://codeberg.org/randyos/logo.git
