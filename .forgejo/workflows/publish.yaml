@@ -9,19 +9,36 @@ jobs:
     name: Build and Deploy
     steps:
       - uses: actions/checkout@v7
-      - uses: https://codeberg.org/mlugg/setup-zig@v2
-        with:
-          version: master
-      - run: |
-          zig build
+
+      - name: Setup Zine
+        uses: https://github.com/kristoff-it/setup-zine@v2
+
+      - name: Build
+        run: zine release
+
+      # - name: Setup Zig
+      #   uses: https://codeberg.org/mlugg/setup-zig@v2
+      #   with:
+      #     version: master
+
+      # - name: Build Zig Project
+      #   run: |
+      #     zig build
+
+      - name: Copy Redirects and Headers
+        run: |
           cp _redirects _headers public/
-      - uses: actions/git-pages@v2
+
+      - name: Deploy to Codeberg (randyos.org)
+        uses: actions/git-pages@v2
         with:
           site: https://randyos.org/
           server: codeberg.page
           token: ${{ forgejo.token }}
           source: public/
-      - uses: actions/git-pages@v2
+
+      - name: Deploy to Codeberg (www.randyos.org)
+        uses: actions/git-pages@v2
         with:
           site: https://www.randyos.org/
           server: codeberg.page
