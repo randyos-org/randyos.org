@@ -9,6 +9,8 @@ jobs:
     name: Build and Deploy
     steps:
       - uses: actions/checkout@v7
+        with:
+          submodules: true
 
       - name: Setup Zine
         uses: https://github.com/kristoff-it/setup-zine@v2
