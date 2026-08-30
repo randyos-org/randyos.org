@@ -10,7 +10,7 @@
 		}
 	</style>
 </head>
-<body id="body">
+<div id="content" role="main">
 	<h1 :text="$page.title"></h1>
 	<div :html="$page.content()"></div>
 	<div>
@@ -22,4 +22,4 @@
 			</a>
 		</div>
 	</div>
-</body>
+</div>

@@ -1,4 +1,12 @@
+alphabg
+Arimo
 forgejo
+Harf
+infty
+insaniam
+libc
+mathrm
+nbsp
 randyos
 supermd
 Temml

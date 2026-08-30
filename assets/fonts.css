@@ -1,0 +1,72 @@
+/*
+Arimo and IBM Plex Serif webfonts, self-hosted from their upstream GitHub
+repos (OFL-1.1 licensed, see fonts/LICENSES/):
+  https://github.com/googlefonts/Arimo/tree/main/fonts/webfonts
+  https://github.com/IBM/plex/tree/master/packages/plex-serif/fonts/complete/woff2
+Re-fetch from those repos rather than hand-editing if these ever need to be
+updated.
+*/
+
+@font-face {
+  font-family: 'Arimo';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Arimo-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Arimo';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/Arimo-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Arimo';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Arimo-Italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Arimo';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/Arimo-BoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/IBMPlexSerif-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Serif';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/IBMPlexSerif-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/IBMPlexSerif-Italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Serif';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/IBMPlexSerif-BoldItalic.woff2') format('woff2');
+}

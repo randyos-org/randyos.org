@@ -1,54 +1,19 @@
 ---
 .title = "About",
-.date = .date("1990-01-01T00:00:00"),
+.date = .date("2026-08-29T17:40:00"),
 .layout = "index.shtml",
 ---
 
-# About Zine
-Zine is an MIT-licensed project created by [Loris Cro](https://kristoff.it) and
-other contributors listed on the [official repository](https://github.com/kristoff-it/zine/contributors).
+The name "RandyOS" began as a joke in Randy's day job for his custom ecosystem of software.  However, Randy's frustration with the limitations of the software at his disposal for scientific computing.  The options were to use low-level languages that are not geared towards mathematics, interpreted languages that are too slow or that don't perform operations natively, or languages geared towards mathematics but that do not provide enough low-level system control.
 
-Zine is inspired by [Hugo](https://gohugo.io) but features an entirely custom set
-of authoring languages:
+He began a journey of developing his own programming language, [Cesium](https://cesium-lang.org), but he realized he still didn't know enough about how machine code interacts with operating systems to make informed decisions.  He also had begun to consolidate common routines from various computer languages and software problems into a "standard library."  It was then that he decided to create his own operating system built around his custom standard library as a learning project.  RandyOS became a reality.
 
-- [Scripty](https://zine-ssg.io/docs/scripty/) is the small expression
-  language that both SuperHTML and SuperMD share to express templating logic.
+Ideally, Randy would have written the OS in Cesium, but since the language is still in very early development and felt like he needed the experience working on an OS kernel to make better design decisions, he chose to implement the new OS entirely in [Zig](https://ziglang.org).  Zig offers many advantages for developing cross-platform software, first and foremost of which is its entirely self-contained tooling and maximum portability.  As a much newer language than C or C++, it also offers modern conveniences to facilitate writing better and safer code by the nature of the language design consistent with contemporary best practices and concepts around systems programming and memory management.
 
-- [SuperHTML](https://zine-ssg.io/docs/superhtml/) is the HTML templating
-   language used by Zine. Unlike most `{{curly braced}}` templating languages,
-   SuperHTML uses valid HTML syntax to express the templating logic, adding only
-   minor extensions to normal HTML.
-   Thanks to this approach, it offers instant
-   syntax checking and autoformatting via [a CLI tool](https://github.com/kristoff-it/superhtml) as well as Language Server support ([VScode Extension](https://marketplace.visualstudio.com/items?itemName=LorisCro.super)).
+The eventual goal is to develop a Linux-compatible kernel that is capable of running systemd as PID 1.  A longer-term goal would be full compatibility such that Linux system drivers could be used with the custom kernel, especially for graphics to use the commercial GPU drivers and fully support the Vulkan API, and allow deploying it to real system hardware.  The nearer term goal will use software rendering and try to get a minimal shell working first.
 
-  ># [NOTE]($block)
-  >The correct file extension for SuperHTML templates is `.shtml`.
+Once such a system is working and stable, we will turn our attention back to Cesium to develop a compiler that targets our new OS as well as cross-compiling for other typical targets like Windows and Linux.
 
-- [SuperMD](https://zine-ssg.io/docs/supermd/) is a superset of Markdown
-  that, instead of relying on inline HTML, offers new constructs for expressing
-  content embeds without pulling into your content needless layouting concerns.
-  A CLI tool and language server for SuperMD is in the works.
+There's no definite timeline for the project, as a hobby project and constrained by the current limitations of the Zig compiler.  As Zig matures and stabilizes, it will become more possible to target a Zig backend for our Cesium compiler rather than something like LLVM or GCC.  We also strive to not have dependence on any libc calls, instead building out the Randy Standard Library.  This is much easier to force that design constraint when targeting a custom OS kernel that does not have libc support.
 
-  ># [NOTE]($block)
-  >The correct file extension for SuperMD pages is `.smd`.
-
-# Zine is alpha software
-
-Zine is not yet complete. The main functionality is present and you will be able
-to build even moderately complex static websites without issue.
-
-That said using Zine today does imply participating in the development process
-to some degree, which usually means inquiring about the development status of
-a feature you need, or reporting a bug.
-
-
-Here are some quicklinks related to Zine:
-
-- Official Website: https://zine-ssg.io/
-- Source Code: https://github.com/kristoff-it/zine/
-- Discord: https://discord.com/invite/B73sGxF
-
-
-
-
-
+Nevertheless, we shall prevail.  Ad astra per insaniam.

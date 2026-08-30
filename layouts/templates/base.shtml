@@ -2,35 +2,112 @@
 <html>
 	<head id="head">
 		<meta charset="utf-8">
+		<script>
+			(function () {
+				try {
+					var t = localStorage.getItem('theme');
+					if (t === 'light' || t === 'dark') {
+						document.documentElement.setAttribute('data-theme', t);
+					}
+				} catch (e) {}
+			})();
+		</script>
 		<meta name="viewport" content="initial-scale=1">
+		<meta name="color-scheme" content="light dark">
 		<title :text="$site.title"></title>
+		<link type="text/css" rel="stylesheet" href="$site.asset('fonts.css').link()">
 		<link type="text/css" rel="stylesheet" href="$site.asset('style.css').link()">
+		<link type="text/css" rel="stylesheet" href="$site.asset('navigation.css').link()">
 		<link type="text/css" rel="stylesheet" href="$site.asset('highlight.css').link()">
 		<!-- mathtex -->
 		<link type="text/css" rel="stylesheet" href="$site.asset('Temml-Local.css').link()">
 		<script defer src="$site.asset('temml.min.js').link()"></script>
 		<script defer src="$site.asset('render-mathtex.js').link()"></script>
 		<!-- /mathtex -->
+		<script defer src="$site.asset('theme-toggle.js').link()"></script>
+		<link rel="icon" href="$site.asset('logo/randyos-avatar-alphabg.png').link()">
+		<link rel="icon" href="$site.asset('logo/randyos-avatar.svg').link()">
 		<super>
 	</head>
 	<body id="body">
-		<h1 class="site-title" :text="$site.title"></h1>
-		<nav>
-			<a href="$site.page('').link()">Home</a>
-			&nbsp; • &nbsp;
-			<a href="$site.page('about').link()">About</a>
-			&nbsp; • &nbsp;
-			<a href="$site.page('blog').link()">Blog</a>
-			<ctx :if="$site.page('devlog').subpages().first?()">
-				&nbsp; • &nbsp;
-				<a href="$if.link()">Devlog</a>
-			</ctx>
+		<!-- <h1 class="site-title" :text="$site.title"></h1> -->
+		<div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+			<a href="$site.link()">
+				<img id="header-image" class="logo-img" src="$site.asset('logo/randyos-logo.svg').link()" alt="RandyOS Logo">
+				<img id="header-image-light" class="logo-img" src="$site.asset('logo/randyos-logo-lightmode.svg').link()" alt="RandyOS Logo">
+			</a>
+			<button id="theme-toggle" type="button" aria-label="Toggle light/dark theme">
+				<span class="icon-sun" aria-hidden="true">☀️</span>
+				<span class="icon-moon" aria-hidden="true">🌙</span>
+			</button>
+		</div>
+		<nav id="mobile-navbar" class="nav container">
+			<label for="mobile-toggle" id="hamburger">
+				<svg style="width:2em;height:2em;" viewBox="0 0 24 24">
+					<path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/>
+				</svg>
+			</label>
+			<span style="overflow:hidden; max-width: 80%; display: inline-block; vertical-align:bottom;"
+			      :text="$page.title"
+			>
+			</span>
 		</nav>
-		<super>
-		<footer>
+		<div id="mobile-subnav">
+			<input type="checkbox" name="mobile-toggle" id="mobile-toggle">
+			<div id="menu">
+				<ctx page="$site.page('')">
+					<a class="navbar-item" href="$ctx.page.link()">Home</a>
+				</ctx>
+				<ctx page="$site.page('about')">
+					<a class="navbar-item" href="$ctx.page.link()" :text="$ctx.page.title"></a>
+				</ctx>
+				<ctx page="$site.page('blog')">
+					<a class="navbar-item" href="$ctx.page.link()" :text="$ctx.page.title"></a>
+				</ctx>
+				<a href="https://codeberg.org/randyos/randyos"
+				   class="navbar-item external-link external-link-light"
+				>Source Code</a>
+			</div>
+		</div>
+		<nav id="navbar" class="nav">
+			<div class="container" style="display:flex; justify-content: space-between;">
+				<div>
+					<ctx page="$site.page('')">
+						<a class="navbar-item" href="$ctx.page.link()">Home</a>
+					</ctx>
+					&nbsp; • &nbsp;
+					<ctx page="$site.page('about')">
+						<a class="navbar-item" href="$ctx.page.link()" :text="$ctx.page.title"></a>
+					</ctx>
+					&nbsp; • &nbsp;
+					<ctx page="$site.page('blog')">
+						<a class="navbar-item" href="$ctx.page.link()" :text="$ctx.page.title"></a>
+					</ctx>
+					&nbsp; • &nbsp;
+					<a href="https://codeberg.org/randyos/randyos"
+					   class="navbar-item external-link external-link-light"
+					>Source Code</a>
+				</div>
+			</div>
+		</nav>
+		<div id="content" class="container" role="main">
+			<super>
+		</div>
+		<footer class="container">
 			<hr>
-			<h5>SITE UNDER CONSTRUCTION</h5>
-			<img src="$site.asset('under-construction.gif').link()" width=90>
+			<p>
+				&copy; 2026 <a href='mailto:randy@randyos.org'>Randy Eckman</a>
+				&nbsp; • &nbsp;
+				<a href="https://codeberg.org/randyos/randyos.org" class="external-link">Website source</a>
+				(MIT licensed)
+				&nbsp; • &nbsp;
+				<a href="$site.page('blog').alternative('rss').link()">Blog RSS</a>
+			</p>
+			<p>
+				Built with <a href="https://zine-ssg.io" class="external-link">Zine</a>
+				&nbsp; • &nbsp;
+				Hosted by <a href="https://codeberg.page/" class="external-link">Codeberg Pages</a>
+			</p>
 		</footer>
 	</body>
 </html>
