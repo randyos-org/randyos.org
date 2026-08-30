@@ -144,9 +144,18 @@ a:not(:hover) {
   border: none;
   cursor: pointer;
   color: inherit;
-  font-size: 1.3em;
+  font-family: inherit;
+  font-size: 1rem;
   line-height: 1;
-  padding: 4px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+#theme-toggle .icon-sun,
+#theme-toggle .icon-moon {
+  font-size: 1.3em;
 }
 
 .icon-sun {

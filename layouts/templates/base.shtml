@@ -37,6 +37,7 @@
 				<img id="header-image-light" class="logo-img" src="$site.asset('logo/randyos-logo-lightmode.svg').link()" alt="RandyOS Logo">
 			</a>
 			<button id="theme-toggle" type="button" aria-label="Toggle light/dark theme">
+				<span>Toggle light/dark</span>
 				<span class="icon-sun" aria-hidden="true">☀️</span>
 				<span class="icon-moon" aria-hidden="true">🌙</span>
 			</button>
