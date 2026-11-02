@@ -15,17 +15,16 @@ jobs:
       - name: Setup Zine
         uses: https://github.com/kristoff-it/setup-zine@v2
 
+      - name: Setup Zig
+        uses: https://codeberg.org/mlugg/setup-zig@v2
+        with:
+          version: 0.17.0
+
+      - name: Fetch doc sources
+        run: git clone --depth 1 https://codeberg.org/randyos/rstd.git ../rstd
+
       - name: Build
-        run: zine release
-
-      # - name: Setup Zig
-      #   uses: https://codeberg.org/mlugg/setup-zig@v2
-      #   with:
-      #     version: master
-
-      # - name: Build Zig Project
-      #   run: |
-      #     zig build
+        run: zig build -Drstd=../rstd -p public
 
       - name: Copy Redirects and Headers
         run: |

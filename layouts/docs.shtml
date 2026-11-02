@@ -1,0 +1,11 @@
+<extend template="base.shtml">
+<head id="head">
+</head>
+<div id="content" role="main">
+	<h1 :text="$page.title"></h1>
+	<div :html="$page.content()"></div>
+	<!-- plain hrefs: docs exist only when built with -D<project>=<path> -->
+	<ul>
+		<li><a href="/docs/rstd/">rstd</a>: the Randy Standard Library</li>
+	</ul>
+</div>

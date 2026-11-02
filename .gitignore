@@ -5,3 +5,4 @@ zig-out/
 doctest-*
 /public
 /zine.exe
+/zine-*.exe

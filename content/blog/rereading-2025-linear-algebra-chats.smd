@@ -1,0 +1,163 @@
+---
+.title = "Rereading my 2025 linear algebra chats",
+.description = "What survived from a summer of asking ChatGPT about BLAS, SNOPT and sparse matrices, and what did not.",
+.date = .date("2026-11-01T00:00:00"),
+.authors = ["Randy Eckman"],
+.tags = ["linalg", "blas", "sparse", "srapnol", "zig"],
+.layout = "post.shtml",
+.draft = false,
+---
+
+In May and June of 2025, before rstd had a BLAS and before SRAPNOL had a name,
+I had a run of long conversations with ChatGPT about linear algebra libraries,
+SNOPT and sparse matrices. Now that the BLAS port is close to feature complete,
+and SRAPNOL has a basic design, I reread the export, this time with Claude
+helping fact-check and summarize, to see which of those ideas made it into code,
+which should not have, and which are still worth considering today (if any).
+
+# Where it started
+
+Most of the scientific code I work with regularly lived (and still lives) in
+Fortran: matrix products, eigendecompositions, inverses, trigonometry and
+elliptic integrals. I wanted a language with more community behind it than
+Modern Fortran--albeit scrappy, robust, and prolific as the language and its
+community still is in our field.  While Python is also very common in the field
+as well, leveraging Numpy, SciPy, and/or Pandas to do the vectorized operations
+that allow things to still run at scale while being "better supported" by the
+community... I also wanted a focused, strongly-typed, data-oriented code/design
+style.  In terms of options with better modern community adoption than Fortran,
+Zig won me over for a variety of reasons, beating out C and Rust.
+Zig is procedural like Fortran, but with portable SIMD through `@Vector` instead
+of `immintrin.h` and `#ifdef`s.
+
+In hindsight today, Odin is also an interesting option still worthy of
+consideration for future endeavors, but for now, I put my money on Zig.
+The main thing that drew my appeal after beginning to work with it
+was its self-contained build system and goals of independence from external
+tooling and dependencies, even going so far as to try to replace LLVM, the engine
+behind just about every non-GCC compiler today.  A very bold move, but one that
+seems to have captured the attention of very important players in the CS world.
+Odin may have reached a v1.0 first, but it's a batteries-included language that
+still depends on classic build systems.  By contrast, Zig's more minimalistic
+approach gives you only what you need, but gives you ultimate control over every
+aspect to almost an assembly-level granularity, while still relying on
+the ecosystem and explicit dependencies for additional functionality.
+While Zig's leadership may suffer from classic ADHD scope creep (hey, it takes
+one to know one) and tends to try to absorb more capabilities, it tends to try
+to shed core functionalities to spinoff external libraries at the same time.
+
+The churn of Zig's development and its evolving ecosystem can be seen as a risk,
+along with their fierce opposition to AI usage in the core community, which I
+think is what led to the notorious conversion of Bun from Zig to Rust earlier
+this year.  Ironically enough, while that story was unfolding, I was in the
+midst of taking some Go applications I was growing frustrated with trying to
+debug, and worked with Claude to convert them to Zig with wild success.
+I called it the Reverse Bun.  Meanwhile, Ghostty and TigerBeetle continue to be
+cornerstones of the Zig ecosystem, providing more confidence that the language
+will continue to be viable and supported in the long term, as well as serve as
+voices of reason within the community when breaking changes loom too large.
+Zig is here to stay, and it has quickly become the foundation of everything I
+work on these days wherever possible.
+
+The first conclusion from the 2025 chats with ChatGPT held up: Fortran is fast
+because of what its semantics let the compiler assume (arguments do not alias),
+not because of instructions C cannot reach.
+Fortran does a good job of abstracting away the low-level details of memory layout
+and loop optimizations, letting the compiler focus on generating efficient code,
+but it does so at the expense of fine-grained control or, critical for developers
+truly chasing every last ounce of performance, insight into why or how any of it
+works short of a disassembler.
+
+# The BLAS plan that did not survive
+
+The 2025 plan was bindings: MKL on Intel, Accelerate on Apple silicon, BLIS everywhere else,
+picked at compile time and statically linked, one executable per backend. At one point, the plan
+was a launcher that spawns the right static executable for the machine.
+
+None of that exists in our implementation today, though I suppose it still could.
+Rstd's BLAS is a native Zig port of OpenBLAS's structure, and selecting a
+CPU core fills a table of kernels once at startup.  The worry about run-time
+dispatch that drove the 2025 design turned out to be a non-issue.
+
+For a MacOS target, Accelerate did survive from the original proposal as the default
+run-time route in lieu of the custom OpenBLAS or other open-source kernels.
+Apple Silicon has many specialized instructions that Accelerate can leverage
+efficiently but that are not publicly documented.  Lacking any commonly accepted
+white-room implementations or reverse engineering of this extended ISA,
+Accelerate remains the practical choice to maximize performance on Apple Silicon.
+
+We do still draw inspiration for our threading model and some of the kernels we
+have since tweaked from BLIS.  But there are many influences on our linear algebra
+implementation beyond BLIS, including ideas from LAPACK, ReLAPACK, Faer,
+libflame/AOCL-libFRAME, LINPACK, EISPACK, 1988 open-source MATLAB,
+and our own experiments with Zig's capabilities.
+Many of these conceptual, but often some code is borrowed or adapted as well.
+Ideas also drew inspiration from benchmarks against or clean-room observations
+of the likes of Eigen, MKL, or even GLSL and SPIR-V spec for understanding how GPUs handle
+linear algebra computations to help genericize concepts.
+
+# Why not just use SNOPT
+
+SNOPT's proprietary license rules it out for usage by open source libraries,
+and it has always seemed better suited than IPOPT to things of interest to me
+like spacecraft trajectories. Those problems have a few tight active constraints,
+often start infeasible, and get solved in chains where each run starts from the last.
+An active-set SQP method identifies the active set exactly and is well-suited to warm-starts;
+an interior-point method approaches the bounds from inside and restarts poorly.
+This desire for an SNOPT alternative led to the creation of SRAPNOL:
+an SQP solver in Zig, written from Gill, Murray and Saunders's papers, similar
+to SNOPT's `snOptA` interface.
+
+# The sparse rabbit hole
+
+The longest conversation was about storing SNOPT's sparse Jacobians.
+I proposed my own format: one array of values, one array of linear indices
+(`row + col * nrows`) sorted column-major, and a small table pointing into them
+every 128 columns instead of a pointer per column. ChatGPT named it
+"BLCOO, bucketed linear COO", and helped me design kernels for it over a long thread.
+
+Some of it was right. Computing the pattern of a sparse product before its values, and reusing
+that pattern while the inputs keep theirs, is how real libraries do it. Gustavson's
+column-by-column product is the right algorithm for column-major storage.
+
+Rereading, though, a lot of it was just ChatGPT agreeing with me:
+
+- I asked whether transposing `x`, multiplying, and transposing back gives `A x`. It said yes.
+  It gives `Aᵀ x`. I switched my default layout back to column-major on that answer; the choice
+  happened to be right, for a different reason.
+- After proposing Gustavson's method, which only reads columns of `A`, it told me a sparse
+  product needs rows of `A`, and the thread ended on transposed views that were never needed.
+- It called BLCOO innovative (the audacity!).
+  The problem it solves--more columns than nonzeros--already has a name: hypersparse.
+  It also has a standard format: DCSC, from 2008.  SuiteSparse:GraphBLAS ships
+  with it. Meanwhile, BLCOO saves only the column pointers, about 3% in ChatGPT's
+  own example, and a 32-bit linear index stops working past a 65536-by-65536 matrix.
+
+In a later thread, ChatGPT forgot what it named the storage format already, and
+it read BLCOO as "block COO" and suggested it for video streaming.  Oh, the old
+hallucinogenic days of yore.
+
+Currently, SRAPNOL stores its Jacobian the way SNOPT does, in compressed sparse columns.
+Pricing, the step that picks which constraint to free next, takes one dot product per column,
+exactly what that layout is good at.  I still want to investigate alternative
+formats like actual DCSC or my BLCOO variant.
+
+# What I took from it
+
+The chats were good at vocabulary and at mapping the territory: the Sparse BLAS, SuiteSparse,
+GraphBLAS, what "kernel" means, which test sets SNOPT is measured on. They were bad at telling
+me no. When the answer depended on my own idea being right, it usually was, according to
+ChatGPT.
+
+I have since learned to ask for prior art by name before believing something is
+new, and I ask it to restate the plan every few messages because sometimes it
+can get lost in the context. Especially since I had to correct its picture of
+BLCOO three times in one thread.  But Claude is not immune to this either, and
+I have learned to ask it to write down its to-do list in text files rather than
+trust the to-do list it shows in chat will remain up to date or have items
+mysteriously fall off of that list.
+
+The ideas that survived review are recorded in rstd's linear algebra design notes,
+as a planned sparse matrix section and a pair of to-do items, and in
+SRAPNOL design notes.  The next sparse work is a real LU factorization rather
+than just focusing on sparse matrix products.

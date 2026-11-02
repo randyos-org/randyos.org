@@ -4,11 +4,11 @@
     .fingerprint = 0x13f60fe987be0503,
     .paths = .{""},
 
-    .minimum_zig_version = "0.16.0",
+    .minimum_zig_version = "0.17.0",
     .dependencies = .{
         .zine = .{
-            .url = "git+https://github.com/kristoff-it/zine?ref=v0.13.0#a06ce90abcda563b9371b97295f7d68e69b818a5",
-            .hash = "zine-0.13.0-ou6nIK1fFwA8xj3QFScC6Fjvqa4DhpXltQiKLAQe3DeC",
+            .url = "git+https://github.com/kristoff-it/zine?ref=v0.14.1#6cacc90b1dfdc414859683e85e05c93602a4afd1",
+            .hash = "zine-0.14.1-ou6nIFeNFwCxFPt29bP6F-PubAggNwx148VrLX4Oo4zN",
         },
     },
 }

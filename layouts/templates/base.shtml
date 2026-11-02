@@ -65,6 +65,9 @@
 				<ctx page="$site.page('blog')">
 					<a class="navbar-item" href="$ctx.page.link()" :text="$ctx.page.title"></a>
 				</ctx>
+				<ctx page="$site.page('docs')">
+					<a class="navbar-item" href="$ctx.page.link()" :text="$ctx.page.title"></a>
+				</ctx>
 				<a href="https://codeberg.org/randyos/randyos"
 				   class="navbar-item external-link external-link-light"
 				>Source Code</a>
@@ -82,6 +85,10 @@
 					</ctx>
 					&nbsp; • &nbsp;
 					<ctx page="$site.page('blog')">
+						<a class="navbar-item" href="$ctx.page.link()" :text="$ctx.page.title"></a>
+					</ctx>
+					&nbsp; • &nbsp;
+					<ctx page="$site.page('docs')">
 						<a class="navbar-item" href="$ctx.page.link()" :text="$ctx.page.title"></a>
 					</ctx>
 					&nbsp; • &nbsp;
