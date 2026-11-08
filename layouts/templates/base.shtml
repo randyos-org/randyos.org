@@ -106,7 +106,7 @@
 			<p>
 				&copy; 2026 <a href='mailto:randy@randyos.org'>Randy Eckman</a>
 				&nbsp; • &nbsp;
-				<a href="https://codeberg.org/randyos/randyos.org" class="external-link">Website source</a>
+				<a href="https://github.com/randyos-org/randyos.org" class="external-link">Website source</a>
 				(MIT licensed)
 				&nbsp; • &nbsp;
 				<a href="$site.page('blog').alternative('rss').link()">Blog RSS</a>
@@ -114,7 +114,7 @@
 			<p>
 				Built with <a href="https://zine-ssg.io" class="external-link">Zine</a>
 				&nbsp; • &nbsp;
-				Hosted by <a href="https://codeberg.page/" class="external-link">Codeberg Pages</a>
+				Hosted by <a href="https://pages.github.com/" class="external-link">GitHub Pages</a>
 			</p>
 		</footer>
 	</body>

@@ -1,0 +1,55 @@
+# Builds the site with Zine, with rstd's API docs from its GitHub repo, and
+# publishes it to GitHub Pages (randyos.org; www.randyos.org redirects there).
+name: Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# one deployment at a time, never canceled halfway
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Setup Zine
+        uses: kristoff-it/setup-zine@v2
+
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: 0.17.0
+
+      - name: Fetch doc sources
+        run: git clone --depth 1 https://github.com/randyos-org/rstd.git ../rstd
+
+      - name: Build
+        run: zig build -Drstd=../rstd -p public
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
