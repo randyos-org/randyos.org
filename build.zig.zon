@@ -4,7 +4,7 @@
     .fingerprint = 0x13f60fe987be0503,
     .paths = .{""},
 
-    .minimum_zig_version = "0.17.0",
+    .minimum_zig_version = "0.17.1",
     .dependencies = .{
         .zine = .{
             .url = "git+https://github.com/kristoff-it/zine?ref=v0.14.1#6cacc90b1dfdc414859683e85e05c93602a4afd1",
